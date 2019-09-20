@@ -23,7 +23,7 @@ public class main {
 
 		User user = new User();
 
-		user.setName("Ambar Singh");
+		user.setName("Ambar Singh1");
 		user.setEmailId("ambar.kumar@adeptia.com");
 		user.setPassword("P@ssw0rd");
 
