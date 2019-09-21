@@ -1,5 +1,6 @@
 package com.singhambar.rests;
 
+import java.io.IOException;
 import java.io.StringWriter;
 
 import javax.ws.rs.Consumes;
@@ -16,15 +17,25 @@ import javax.ws.rs.core.Response.Status;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.singhambar.beans.User;
 import com.singhambar.services.UserService;
 
 import javax.ws.rs.core.UriInfo;
 
+/**
+ * @author Ambar Singh
+ * @email singhambar55@gmail.com
+ *
+ */
 @Path("/user")
-public class UserRestResource {
+public class UserRestResource extends AbstractRESTResource{
 
+	static ApplicationContext appContext=null;
+	static UserService userService=null;
+	
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getUser() {
@@ -37,16 +48,30 @@ public class UserRestResource {
 	public Response createEntity(@Context UriInfo ui, @Context HttpHeaders hh, String data) {
 		
 		Response rs;
-		ApplicationContext appContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+		if(appContext==null)
+		 appContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+		
+		
 		ObjectMapper ob =new ObjectMapper();
 		StringWriter writer = new StringWriter();
-		User user = new User();
-
-		user.setName("Ambar Singh");
-		user.setEmailId("ambar.kumar@adeptia.com");
-		user.setPassword("P@ssw0rd");
-		
-		UserService userService = (UserService) appContext.getBean("userService");
+		User user =null;//new User();
+		try {
+			 user=ob.readValue(data, User.class);
+		} catch (JsonParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+//		user.setName("Ambar Singh12k12");
+//		user.setEmailId("ambar.kumar@adeptia.com");
+//		user.setPassword("P@ssw0rd");
+		if(userService==null)
+		 userService = (UserService) appContext.getBean("userService");
 		try {
 			userService.createUser(user);
 			ob.writeValue(writer, user);
@@ -55,6 +80,12 @@ public class UserRestResource {
 		}
 		return Response.ok(writer.toString()).build();
 		
+	}
+
+	@Override
+	public Object getBean() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -6,29 +6,25 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.Store;
 
+/**
+ * @author Ambar Singh
+ * @email singhambar55@gmail.com
+ *
+ */
 @Entity
-@Indexed
 @Table(name = "USER")
 public class User {
 	@Id
 	@Column(name = "ID", updatable = false, unique = true, nullable = false)
 	private Long id;
 
-	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
 	@Column(name = "NAME")
 	private String name;
 
-	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
 	@Column(name = "EMAIL_ID")
 	private String emailId;
 
-	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
 	@Column(name = "PASSWORD")
 	private String password;
 

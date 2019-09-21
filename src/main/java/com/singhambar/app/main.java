@@ -2,13 +2,11 @@ package com.singhambar.app;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.search.FullTextSession;
-import org.hibernate.search.query.dsl.QueryBuilder;
+/*import org.hibernate.search.FullTextSession;
+import org.hibernate.search.query.dsl.QueryBuilder;*/
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -31,7 +29,7 @@ public class main {
 			UserService userService = (UserService) appContext.getBean("userService");
 			userService.createUser(user);
 
-			SessionFactory sessionFactory = (SessionFactory) appContext.getBean("sessionFactory");
+			/*SessionFactory sessionFactory = (SessionFactory) appContext.getBean("sessionFactory");
 			Session session = sessionFactory.openSession();
 			
 			luceneSearch(session);
@@ -44,14 +42,14 @@ public class main {
 			normalSearch(session);
 			
 			session.close();
-
+*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 	
-	public static void luceneSearch(Session session) {
+	/*public static void luceneSearch(Session session) {
 		FullTextSession fullTextSession = org.hibernate.search.Search.getFullTextSession(session);
 //		fullTextSession.createIndexer().startAndWait();
 		Instant start = Instant.now();
@@ -67,7 +65,7 @@ public class main {
 		long timeElapsed = Duration.between(start, finish).toMillis();
 
 		System.out.println("Lucene:: -> "+timeElapsed + " ms");
-	}
+	}*/
 
 	
 	public static void normalSearch(Session session) {

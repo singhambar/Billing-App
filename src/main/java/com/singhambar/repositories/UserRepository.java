@@ -7,18 +7,16 @@ import org.springframework.stereotype.Repository;
 
 import com.singhambar.beans.User;
 
+/**
+ * @author Ambar Singh
+ * @email singhambar55@gmail.com
+ *
+ */
+
 @Repository
-public interface UserRepository extends JpaRepository<User, Long>{
+public interface UserRepository extends JpaRepository<User, Long> {
 
-	User createUser(User user) throws Exception;
+	public User findByName(String searchString);
 
-	User updateUser(User user) throws Exception;
-
-	User deleteUser(Long userId) throws Exception;
-
-	User getUser(Long userId) throws Exception;
-
-	User getUsers() throws Exception;
-	
 	public List<User> findByNameContainingIgnoreCase(String searchString);
 }
