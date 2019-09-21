@@ -1,96 +1,158 @@
 <!DOCTYPE HTML>
 <html manifest="">
+
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta charset="UTF-8">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, maximum-scale=10, user-scalable=yes">
-<link rel="shortcut icon" type="image/png"
-	href="resources/images/favicon.ico" />
-<div id="loading">
-	<div id="loading-text">
-		<div>
-			<img id="headerimage" style="width: 178px; height: 48px"
-				src="resources/images/company-logo.png">
-			<script type="text/javascript">
-				document.getElementById('headerimage').src = "resources/images/company-logo.png";
-			</script>
-		</div>
-		Loading...
-	</div>
-</div>
-<style type="text/css">
-	::-ms-clear {
-		display: none;
-	}
-	
-	#loading {
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 100%;
-		width: 100%;
-		background-color: #e9f5fb;
-	}
-	
-	#loading #loading-text {
-		color: #666;
-		background-color: #fff;
-		padding: 5px 20px 15px 20px;
-		border: 1px solid #ccc;
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		margin-left: -110px;
-		margin-top: -60px;
-		border-radius: 7px;
-		font-size: 15px !important;
-		text-align: center;
-		font-family: "Lucida Grande", "Helvetica Neue", "Helvetica", "Arial",
-			"Verdana", "sans-serif" !important;
-	}
-</style>
-<title>App</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10, user-scalable=yes">
+    <link rel="shortcut icon" type="image/png" href="resources/images/favicon.ico" />
+    <div id="loading">
+        <div id="loading-text">
+            <div>
+                <img id="headerimage" style="width: 178px; height: 48px" src="resources/images/company-logo.png">
+                <script type="text/javascript">
+                    document.getElementById('headerimage').src = "resources/images/company-logo.png";
+                </script>
+            </div>
+            <div class="lds-ring">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    </div>
+    <style type="text/css">
+        ::-ms-clear {
+            display: none;
+        }
+        
+        #loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: #c2ddf2;
+        }
+        
+        #loading #loading-text {
+            color: #666;
+            background-color: #fff;
+            padding: 5px 20px 15px 20px;
+            border: 1px solid #ccc;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -110px;
+            margin-top: -60px;
+            border-radius: 7px;
+            font-size: 15px !important;
+            text-align: center;
+            font-family: "Lucida Grande", "Helvetica Neue", "Helvetica", "Arial", "Verdana", "sans-serif" !important;
+        }
+        
+        .lds-ring {
+            display: inline-block;
+            position: relative;
+            width: 64px;
+            height: 64px;
+        }
+        
+        .lds-ring div {
+            box-sizing: border-box;
+            display: block;
+            position: absolute;
+            width: 51px;
+            height: 51px;
+            margin: 10px 6px 10px 6px;
+            border: 6px solid #157fcc;
+            border-radius: 50%;
+            animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            border-color: #157fcc transparent transparent transparent;
+        }
+        
+        .lds-ring div:nth-child(1) {
+            animation-delay: -0.45s;
+        }
+        
+        .lds-ring div:nth-child(2) {
+            animation-delay: -0.3s;
+        }
+        
+        .lds-ring div:nth-child(3) {
+            animation-delay: -0.15s;
+        }
+        
+        @ keyframes lds-ring {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate (360 deg);
+            }
+        }
+        
+        @ keyframes bgcolor {
+            0% {
+                background-color: #45a3e5
+            }
+            30% {
+                background-color: #66bf39
+            }
+            60% {
+                background-color: #eb670f
+            }
+            90% {
+                background-color: #f35
+            }
+            100% {
+                background-color: #864cbf
+            }
+        }
+    </style>
+    <title>App</title>
 
-<script type="text/javascript">
-	var Ext = Ext || {}; // Ext namespace won't be defined yet...
+    <script type="text/javascript">
+        var Ext = Ext || {}; // Ext namespace won't be defined yet...
 
-	// This function is called by the Microloader after it has performed basic
-	// device detection. The results are provided in the "tags" object. You can
-	// use these tags here or even add custom tags. These can be used by platform
-	// filters in your manifest or by platformConfig expressions in your app.
-	//
-	Ext.beforeLoad = function(tags) {
-		var s = location.search, // the query string (ex "?foo=1&bar")
-		profile;
+        // This function is called by the Microloader after it has performed basic
+        // device detection. The results are provided in the "tags" object. You can
+        // use these tags here or even add custom tags. These can be used by platform
+        // filters in your manifest or by platformConfig expressions in your app.
+        //
+        Ext.beforeLoad = function(tags) {
+            var s = location.search, // the query string (ex "?foo=1&bar")
+                profile;
 
-		// For testing look for "?classic" or "?modern" in the URL to override
-		// device detection default.
-		//
-		if (s.match(/\bclassic\b/)) {
-			profile = 'classic';
-		} else if (s.match(/\bmodern\b/)) {
-			profile = 'modern';
-		} else {
-			profile = tags.desktop ? 'classic' : 'modern';
-			//profile = tags.phone ? 'modern' : 'classic';
-		}
+            // For testing look for "?classic" or "?modern" in the URL to override
+            // device detection default.
+            //
+            if (s.match(/\bclassic\b/)) {
+                profile = 'classic';
+            } else if (s.match(/\bmodern\b/)) {
+                profile = 'modern';
+            } else {
+                profile = tags.desktop ? 'classic' : 'modern';
+                //profile = tags.phone ? 'modern' : 'classic';
+            }
 
-		Ext.manifest = profile; // this name must match a build profile name
+            Ext.manifest = profile; // this name must match a build profile name
 
-		// This function is called once the manifest is available but before
-		// any data is pulled from it.
-		//
-		//return function (manifest) {
-		// peek at / modify the manifest object
-		//};
-	};
-</script>
+            // This function is called once the manifest is available but before
+            // any data is pulled from it.
+            //
+            //return function (manifest) {
+            // peek at / modify the manifest object
+            //};
+        };
+    </script>
 
-<!-- The line below must be kept intact for Sencha Cmd to build your application -->
-<script id="microloader" data-app="e9488a77-05cf-4b9a-9248-8768abb16478"
-	type="text/javascript" src="bootstrap.js"></script>
+    <!-- The line below must be kept intact for Sencha Cmd to build your application -->
+    <script id="microloader" data-app="e9488a77-05cf-4b9a-9248-8768abb16478" type="text/javascript" src="bootstrap.js"></script>
 
 </head>
+
 <body></body>
+
 </html>
