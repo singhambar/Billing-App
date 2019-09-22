@@ -1,8 +1,12 @@
 package com.singhambar.beans;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
@@ -27,7 +31,10 @@ public class User {
 
 	@Column(name = "PASSWORD")
 	private String password;
-
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "userId")
+	private Set<AuthToken> tokens;
+	
 	public Long getId() {
 		return id;
 	}

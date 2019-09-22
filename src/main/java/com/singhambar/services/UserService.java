@@ -2,6 +2,9 @@ package com.singhambar.services;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
+import com.singhambar.beans.AuthToken;
 import com.singhambar.beans.User;
 
 /**
@@ -20,4 +23,9 @@ public interface UserService {
 	User getUser(Long userId) throws Exception;
 
 	List<User> getUsers() throws Exception;
+
+	User findByEmailIdAndPassword(String name, String password);
+	
+	@Transactional
+	AuthToken login(String name, String password) throws Exception;
 }

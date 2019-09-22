@@ -1,4 +1,7 @@
 {
 	"home": "Home",
-	"settings": "Settings"
+	"products": "Products",
+	"users": "Users",
+	"settings": "Settings",
+	"rememberMe": "Remember me"
 }

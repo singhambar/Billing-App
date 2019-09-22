@@ -16,7 +16,7 @@ import com.singhambar.beans.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	public User findByName(String searchString);
+	public User findByEmailIdAndPassword(String name, String password);
 
 	public List<User> findByNameContainingIgnoreCase(String searchString);
 }

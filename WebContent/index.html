@@ -34,6 +34,7 @@
             height: 100%;
             width: 100%;
             background-color: #c2ddf2;
+            z-index: -1 !important;
         }
         
         #loading #loading-text {
@@ -84,16 +85,16 @@
             animation-delay: -0.15s;
         }
         
-        @ keyframes lds-ring {
+        @keyframes lds-ring {
             0% {
                 transform: rotate(0deg);
             }
             100% {
-                transform: rotate (360 deg);
+                transform: rotate(360deg);
             }
         }
         
-        @ keyframes bgcolor {
+        @keyframes bgcolor {
             0% {
                 background-color: #45a3e5
             }

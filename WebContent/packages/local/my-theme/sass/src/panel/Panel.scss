@@ -1,5 +1,5 @@
 @include extjs-tab-panel-ui(
-        $ui: 'navigationn',
+        $ui: 'custom-navigation',
         $ui-tab-background-color: transparent,
         $ui-tab-background-color-over: #505050,
         $ui-tab-background-color-active: #000000,
@@ -22,7 +22,7 @@
 		$ui-tab-text-padding: 0px,
 		$ui-bar-padding:0,
 		$ui-bar-plain-padding:0,		
-        $ui-tab-margin: 5px 10px 5px 10px,
+        $ui-tab-margin: 10px 10px 10px 10px,
         $ui-tab-font-size: 15px,
         $ui-tab-font-size-over: 15px,
         $ui-tab-font-size-active: 15px,
@@ -40,9 +40,45 @@
 		$ui-tab-border-color-active:none
     );
 	@include extjs-panel-ui(
-		$ui: 'navigationn',
+		$ui: 'custom-navigation',
 		$ui-header-background-color: #404040,
 		$ui-border-width: 1px,
 		$ui-border-radius: 0,
-		$ui-header-color: #fff
+		$ui-header-color: #fff,
+		$ui-ignore-frame-padding:true
 	);
+	
+	.x-tab-custom-navigation-top {
+	    -webkit-border-radius: 20px;
+	    -moz-border-radius: 20px;
+	    -ms-border-radius: 20px;
+	    -o-border-radius: 20px;
+	    border-radius: 20px;
+	    padding: 15px 20px 15px 20px;
+	    border-width: 0;
+	    border-style: solid;
+	    background-color: transparent;
+	}
+	.x-title-icon-custom-navigation {
+	    font-family: FontAwesome;
+	    color: #fff;
+	    font-size: 24px;
+	    line-height: 24px;
+	}
+	.x-tab-icon-el-custom-navigation {
+	    font-family: FontAwesome;
+	    color: #acacac;
+	
+	    .x-tab-over & {
+	        color: #c4c4c4;
+	    }
+	
+	    .x-tab-active & {
+	        color: #fff;
+	    }
+	}
+
+	.x-panel-header-title-custom-navigation > .x-title-text-custom-navigation:after {
+	    top: 30px;
+	    right: -24px;
+	}

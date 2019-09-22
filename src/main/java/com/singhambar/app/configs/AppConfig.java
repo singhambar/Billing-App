@@ -15,6 +15,6 @@ public class AppConfig extends ResourceConfig{
 	public AppConfig() {
 		packages("com.singhambar.rests");
 		
-		BeanFactory.getBean("userService");
+		register(AuthenticationFilter.class);
 	}
 }

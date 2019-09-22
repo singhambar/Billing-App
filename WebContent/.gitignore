@@ -3,3 +3,8 @@ bootstrap.*
 classic.json*
 modern.json*
 .sencha
+/sencha-error-20190921-3.log
+/sencha-error-20190921-4.log
+/sencha-error-20190921-5.log
+/sencha-error-20190921.log
+/debug.log
