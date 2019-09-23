@@ -47,7 +47,6 @@ import javax.ws.rs.core.UriInfo;
 @Path("/user")
 public class UserRestResource extends AbstractRESTResource {
 
-	static ApplicationContext appContext = null;
 	UserService userService = null;
 
 	@GET
@@ -63,9 +62,6 @@ public class UserRestResource extends AbstractRESTResource {
 	public Response createEntity(@Context UriInfo ui, @Context HttpHeaders hh, String data) {
 
 		Response rs;
-		if (appContext == null)
-			appContext = new ClassPathXmlApplicationContext("applicationContext.xml");
-
 		ObjectMapper ob = new ObjectMapper();
 		StringWriter writer = new StringWriter();
 		User user = null;// new User();
@@ -79,7 +75,6 @@ public class UserRestResource extends AbstractRESTResource {
 			System.out.println(enc.decrypt(user.getPassword()));
 
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		try {
@@ -95,7 +90,7 @@ public class UserRestResource extends AbstractRESTResource {
 	@Override
 	public UserService getBean() {
 		if (userService == null) {
-			userService = appContext.getBean("userService", UserService.class);
+			userService = BeanFactory.getBean("userService", UserService.class);
 		}
 		return userService;
 	}
@@ -106,12 +101,6 @@ public class UserRestResource extends AbstractRESTResource {
 	public Response login(@Context UriInfo ui, @Context HttpHeaders hh, String data) {
 
 		User user = null;
-		Map<String, Cookie> cookies = hh.getCookies();
-	      String str = cookies.entrySet()
-	                          .stream()
-	                          .map(e -> e.getKey() + " = " + e.getValue().getValue())
-	                          .collect(Collectors.joining("<br/>"));
-System.out.println(str);
 		try {
 			ObjectMapper ob = new ObjectMapper();
 			user = ob.readValue(data, User.class);

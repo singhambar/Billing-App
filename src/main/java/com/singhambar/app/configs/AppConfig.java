@@ -13,8 +13,11 @@ import org.glassfish.jersey.server.ResourceConfig;
 public class AppConfig extends ResourceConfig{
 
 	public AppConfig() {
+		
 		packages("com.singhambar.rests");
 		
 		register(AuthenticationFilter.class);
+		
+		BeanFactory.getBean("entityManagerFactory");
 	}
 }

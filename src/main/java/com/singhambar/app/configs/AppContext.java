@@ -13,7 +13,7 @@ public enum AppContext {
 
 	INSTANCE;
 
-	private ApplicationContext appContext = new ClassPathXmlApplicationContext("classpath:applicationConfig.xml");
+	private ApplicationContext appContext = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
 
 	public ApplicationContext getAppContextInstance() {
 		return appContext;
