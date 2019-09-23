@@ -14,13 +14,27 @@ import java.util.StringTokenizer;
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.singhambar.app.HashGeneratorUtils;
+import com.singhambar.beans.AuthToken;
+import com.singhambar.repositories.AuthTokenRepository;
+import com.singhambar.services.AuthTokenService;
+import com.singhambar.services.UserService;
+import com.singhambar.services.impl.AuthTokenServiceImpl;
+import com.singhambar.services.impl.UserServiceImpl;
 
 /**
  * @author Ambar Singh
@@ -35,7 +49,10 @@ public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequ
 	
 	@Context 
 	HttpServletRequest request;
-
+	
+	@Context 
+	HttpServletResponse  response;
+	
 	private static final String AUTHORIZATION_PROPERTY = "Authorization";
 	private static final String AUTHENTICATION_SCHEME = "Basic";
 
@@ -44,9 +61,16 @@ public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequ
 		Method method = resourceInfo.getResourceMethod();
 		final MultivaluedMap<String, String> headers = requestContext.getHeaders();
 		headers.get("Cookie");
-
+		
+		try {
+			validateAndUpdateToken(requestContext);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		// Access allowed for all
-		if (!method.isAnnotationPresent(PermitAll.class)) {
+		if (false && !method.isAnnotationPresent(PermitAll.class)) {
 			// Access denied for all
 			if (method.isAnnotationPresent(DenyAll.class)) {
 				requestContext.abortWith(
@@ -116,6 +140,70 @@ public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequ
 			}
 		}
 		return isAllowed;
+	}
+	
+	private void validateAndUpdateToken(ContainerRequestContext requestContext) throws Exception {
+		final MultivaluedMap<String, String> headers = requestContext.getHeaders();
+		headers.get("Cookie");
+		
+		HttpSession session = request.getSession(false);
+		 
+		boolean loggedIn = session != null && session.getAttribute("loggedCustomer") != null;
+		 
+		Cookie[] cookies = request.getCookies();
+		 
+		if (!loggedIn && cookies != null) {
+		    // process auto login for remember me feature
+		    String selector = "";
+		    String rawValidator = "";  
+		     
+		    for (Cookie aCookie : cookies) {
+		        if (aCookie.getName().equals("ACCESS_TOKEN")) {
+		            selector = aCookie.getValue();
+		        } else if (aCookie.getName().equals("VALIDATION_KEY")) {
+		            rawValidator = aCookie.getValue();
+		        }
+		    }
+		     
+		    if (!"".equals(selector) && !"".equals(rawValidator)) {
+		    	
+		    	AuthTokenService tokenService= BeanFactory.getBean("authTokenService", AuthTokenService.class);
+		    	AuthToken token= tokenService.findByTokenAndValidator(selector, rawValidator);
+		    	
+		        if (token != null) {
+		            String hashedValidatorDatabase = token.getValidator();
+		            String hashedValidatorCookie = HashGeneratorUtils.generateSHA256(rawValidator);
+		             
+		            if (hashedValidatorCookie.equals(hashedValidatorDatabase)) {
+		                session = request.getSession();
+		                session.setAttribute("loggedCustomer", token.getUserId());
+		                loggedIn = true;
+		                 
+		                // update new token in database
+		                String newSelector = RandomStringUtils.randomAlphanumeric(12);
+		                String newRawValidator =  RandomStringUtils.randomAlphanumeric(64);
+		                 
+		                String newHashedValidator = HashGeneratorUtils.generateSHA256(newRawValidator);
+		                 
+		                token.setToken(newSelector);
+		                token.setValidator(newHashedValidator);
+		                tokenService.update(token);
+		                 
+		                // update cookie
+		                Cookie cookieSelector = new Cookie("selector", newSelector);
+		                cookieSelector.setMaxAge(604800);
+		                 
+		                Cookie cookieValidator = new Cookie("validator", newRawValidator);
+		                cookieValidator.setMaxAge(604800);
+		                 
+		                response.addCookie(cookieSelector);
+		                response.addCookie(cookieValidator);                       
+		                 
+		            }
+		        }
+		    }
+		     
+		}
 	}
 
 }

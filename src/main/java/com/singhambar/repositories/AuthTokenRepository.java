@@ -15,4 +15,6 @@ import com.singhambar.beans.AuthToken;
 public interface AuthTokenRepository extends JpaRepository<AuthToken, Long>{
 
 	public AuthToken findByToken(String token);
+	
+	public AuthToken findByTokenAndValidator(String token, String validator);
 }
