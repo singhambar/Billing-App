@@ -8,11 +8,11 @@ Ext.define('App.view.login.LoginForm', {
     
     buildItems:function(){return [{
         allowBlank: false,
-        name: 'user',
+        name: 'emailId',
         emptyText: 'User Id'
     }, {
         allowBlank: false,
-        name: 'pass',
+        name: 'password',
         emptyText: 'Password',
         inputType: 'password'
     }, {

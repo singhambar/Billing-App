@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.singhambar.app;
+package com.singhambar.app.utilities;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

@@ -3,8 +3,6 @@
  */
 package com.singhambar.rests;
 
-import java.util.logging.Logger;
-
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -27,16 +25,7 @@ import javax.ws.rs.core.UriInfo;
  */
 public interface RESTResource {
 
-	public Logger logger = null;
-
-	@GET
-	@Path("/{id: [0-9]+}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getEntity(@Context UriInfo ui, @Context HttpHeaders hh, @PathParam("id") String id) throws Exception;
-
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getEntities(@Context UriInfo ui, @Context HttpHeaders hh) throws Exception;
+	Object getBean();
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -46,26 +35,28 @@ public interface RESTResource {
 	@PUT
 	@Path("/{id: [0-9]+}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response updateEntity(@Context UriInfo ui, @Context HttpHeaders hh, @PathParam("id") String id, String data) throws Exception;
+	public Response updateEntity(@Context UriInfo ui, @Context HttpHeaders hh, @PathParam("id") String id, String data)
+			throws Exception;
 
-	@POST
+	@GET
 	@Path("/{id: [0-9]+}")
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response saveOrUpdateEntity(@Context UriInfo ui, @Context HttpHeaders hh, @PathParam("id") String id,
-			String data) throws Exception;
+	public Response getEntity(@Context UriInfo ui, @Context HttpHeaders hh, @PathParam("id") String id)
+			throws Exception;
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getEntities(@Context UriInfo ui, @Context HttpHeaders hh) throws Exception;
 
 	@DELETE
 	@Path("/{id: [0-9]+}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response deleteEntity(@Context UriInfo ui, @Context HttpHeaders hh, @PathParam("id") String id) throws Exception;
+	public Response deleteEntity(@Context UriInfo ui, @Context HttpHeaders hh, @PathParam("id") String id)
+			throws Exception;
 
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Transactional
 	public Response deleteEntities(@Context UriInfo ui, @Context HttpHeaders hh) throws Exception;
-	
-	Object getBean();
-	
-	
+
 }

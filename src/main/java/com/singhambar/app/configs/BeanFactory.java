@@ -1,7 +1,9 @@
 package com.singhambar.app.configs;
 
-
 import com.singhambar.app.configs.AppContext;
+import com.singhambar.app.utilities.AppLogger;
+import com.singhambar.beans.AuthToken;
+import com.singhambar.services.AuthTokenService;
 
 /**
  * @author Ambar Singh
@@ -9,6 +11,23 @@ import com.singhambar.app.configs.AppContext;
  *
  */
 public class BeanFactory {
+
+	public static void loadApplicationContext() {
+
+		if (AppContext.INSTANCE.getAppContextInstance() == null)
+			AppLogger.getLogger().error("Failure");
+		else
+			AppLogger.getLogger().info("Application Context loaded successfully.");
+		
+			try {
+				AuthTokenService<AuthToken, Long> tokenService = BeanFactory.getBean("authTokenService",
+						AuthTokenService.class);
+				tokenService.deleteAll();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
 
 	public static Object getBean(String beanName) {
 		return AppContext.INSTANCE.getAppContextInstance().getBean(beanName);

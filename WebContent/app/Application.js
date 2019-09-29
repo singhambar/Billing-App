@@ -13,6 +13,13 @@ Ext.define('App.Application', {
             quickTips: true
         }
     },
+    requires: [
+        'Ext.app.*',
+        'Ext.state.CookieProvider',
+        'Ext.chart.*',
+        'App.utilities.AppUtil',
+        'Ext.window.MessageBox'
+    ],
     stores:['ChartStore'],
     defaultToken: 'login',
     listen: {
@@ -38,11 +45,7 @@ Ext.define('App.Application', {
     launch: function() {
         var me = this,
             activeItem = 0,
-            token = Ext.util.History.getToken(),
-            view = 'App.view.Viewport';
-//        me.setMainView({
-//            xclass: view
-//        });
+            token = Ext.util.History.getToken();
         
         Ext.fly('loading').fadeOut({
             callback: function() {
@@ -51,7 +54,8 @@ Ext.define('App.Application', {
         });
         if(token == 'logout'){
     	 	return;
-        }
+        }debugger
+        AppUtil.loadUserInfo();
         var username = Ext.util.Cookies.get('ACCESS_TOKEN');
         if (Ext.isEmpty(username)) {
             activeItem = 0;

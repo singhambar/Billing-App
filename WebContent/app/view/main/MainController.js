@@ -34,15 +34,11 @@ Ext.define('App.view.main.MainController', {
             //
         }
     },
-    onClickLogin:function(){debugger
-    	var viewport = Ext.ComponentQuery.query('sub-viewport')[0];
-            if (viewport) {
-                var layout = viewport.getLayout();
-                layout.setActiveItem(1);
-            }
+    onClickLogin:function(btn){debugger
     Ext.Ajax.request({
-    	url:'rest/user',
-		method:'GET',
+    	url:'rest/user/login',
+		method:'POST',
+		jsonData:btn.up('form').getValues(),
         success: function(response, opts) {
         	var viewport = Ext.ComponentQuery.query('sub-viewport')[0];
             if (viewport) {
