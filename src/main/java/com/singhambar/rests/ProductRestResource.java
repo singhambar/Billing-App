@@ -2,19 +2,33 @@ package com.singhambar.rests;
 
 import static com.singhambar.app.utilities.AppConstants.ADMIN;
 import static com.singhambar.app.utilities.AppConstants.COMPANY;
+import static com.singhambar.app.utilities.AppConstants.DEFAULT_PROPERTY;
+import static com.singhambar.app.utilities.AppConstants.DIR;
+import static com.singhambar.app.utilities.AppConstants.LIMIT;
 import static com.singhambar.app.utilities.AppConstants.OWNER;
+import static com.singhambar.app.utilities.AppConstants.PAGE;
+import static com.singhambar.app.utilities.AppConstants.PAGE_NO;
+import static com.singhambar.app.utilities.AppConstants.PAGE_SIZE;
+import static com.singhambar.app.utilities.AppConstants.SORT;
 import static com.singhambar.app.utilities.AppConstants.STAFF;
+import static com.singhambar.app.utilities.AppConstants.TOTAL_COUNT;
 
 import java.io.StringWriter;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.singhambar.app.configs.BeanFactory;
@@ -99,12 +113,22 @@ public class ProductRestResource extends AbstractRESTResource {
 	@RolesAllowed({ ADMIN, OWNER })
 	public Response getEntities(UriInfo ui, HttpHeaders hh) throws Exception {
 		StringWriter writer = new StringWriter();
-		List<Product> product = null;
+		Page<Product> products = null;
 		try {
+			MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
+			int size = queryParams.containsKey(LIMIT) ? Integer.parseInt(queryParams.getFirst(LIMIT)) : PAGE_SIZE;
+			int pageNo = queryParams.containsKey(PAGE) ? Integer.parseInt(queryParams.getFirst(PAGE)) : PAGE_NO;
+			String property = queryParams.containsKey(SORT) ? queryParams.getFirst(SORT) : DEFAULT_PROPERTY;
+			Direction direction = queryParams.containsKey(DIR) ? Direction.fromString(queryParams.getFirst(DIR))
+					: Direction.DESC;
 			ObjectMapper mapper = AppUtils.getMapper();
-			product = getBean().getEntities();
-			mapper.addMixIn(Product.class, UserMixin.class);
-			mapper.writeValue(writer, product);
+			products = getBean().getEntities(PageRequest.of(pageNo, size, direction, property));
+			Map<String, Object> map = new HashMap<String, Object>(2);
+			getLogger().info("Converting user into JSON ...");
+			map.put("Products", products.getContent());
+			map.put(TOTAL_COUNT, products.getTotalElements());
+			mapper.writeValue(writer, map);
+			getLogger().info("Converted successfully into JSON ...");
 		} catch (Exception e) {
 			getLogger().error("Error while updating product", e);
 			throw e;
