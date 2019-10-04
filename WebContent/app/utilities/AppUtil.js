@@ -10,11 +10,14 @@ Ext.define('App.utilities.AppUtil',{
 	loadUserInfo:function(){
 		var userInfo;
 		Ext.Ajax.request({
-	    	url:'rest/user/userinfo',
+	    	url: Configs.getUrl('User','userinfo'),
 			method:'GET',
 			async:false,
 	        success: function(response, opts) {
 	        	userInfo=Ext.decode(response.responseText);
+	        	if(!Ext.isEmpty(userInfo)){
+	        		Context.setLoggedInUser(userInfo);
+	        	}
 	        },
 	        failure: function(response, opts) {
 	            console.log('server-side failure with status code ' + response.status);

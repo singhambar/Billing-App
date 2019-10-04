@@ -5,6 +5,8 @@ package com.singhambar.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.singhambar.beans.BeanId;
@@ -30,6 +32,9 @@ public interface SuperService<T extends BeanId, ID> {
 
 	@Transactional
 	List<T> getEntities() throws Exception;
+	
+	@Transactional
+	Page<T> getEntities(Pageable pageable) throws Exception;
 
 	@Transactional
 	void deleteEntity(ID id) throws Exception;

@@ -1,4 +1,4 @@
-Ext.define('MyApp.view.canvas.user.RegisterationForm', {
+Ext.define('MyApp.view.canvas.users.RegisterationForm', {
     extend: 'Ext.form.Panel',
     xtype: 'registration-form',
     frame: true,

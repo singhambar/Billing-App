@@ -18,10 +18,12 @@ Ext.define('App.Application', {
         'Ext.state.CookieProvider',
         'Ext.chart.*',
         'App.utilities.AppUtil',
+        'App.config.Configs',
+        'App.config.Runtime',
         'Ext.window.MessageBox'
     ],
     stores:['ChartStore'],
-    defaultToken: 'login',
+    defaultToken: 'home',
     listen: {
         controller: {
             'login': {
@@ -54,10 +56,9 @@ Ext.define('App.Application', {
         });
         if(token == 'logout'){
     	 	return;
-        }debugger
+        }
         AppUtil.loadUserInfo();
-        var username = Ext.util.Cookies.get('ACCESS_TOKEN');
-        if (Ext.isEmpty(username)) {
+        if (Ext.isEmpty(Context.getLoggedInUser())) {
             activeItem = 0;
             Ext.util.Cookies.set('OLD_TOKEN',token);
             token = 'login';
@@ -66,9 +67,9 @@ Ext.define('App.Application', {
             token = Ext.isEmpty(token) ? me.getDefaultToken() : token;
         }
         this.getMainView().down('sub-viewport').getLayout().setActiveItem(activeItem);
-        me.redirectTo(token, true);
+        me.redirectTo('tab/home', true);
     },
-    onAppUpdate: function () {debugger
+    onAppUpdate: function () {
         Ext.Msg.confirm('Application Update', 'This application has an update, reload?',
             function (choice) {
                 if (choice === 'yes') {
@@ -77,7 +78,7 @@ Ext.define('App.Application', {
             }
         );
     },
-    onClickLogin: function() {debugger
+    onClickLogin: function() {
         var viewport = Ext.ComponentQuery.query('sub-viewport')[0];
         if (viewport) {
             var layout = viewport.getLayout();

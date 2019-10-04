@@ -1,14 +1,12 @@
 package com.singhambar.services.impl;
 
 import java.io.Serializable;
-import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.singhambar.app.security.EncrypterAndDecrypter;
+import com.singhambar.app.utilities.AppUtils;
 import com.singhambar.app.utilities.HashGeneratorUtils;
 import com.singhambar.beans.AuthToken;
 import com.singhambar.beans.BeanId;
@@ -20,7 +18,6 @@ import com.singhambar.services.UserService;
 
 /**
  * @author Ambar Singh
- * @param <T>
  * @email singhambar55@gmail.com
  *
  */
@@ -34,29 +31,6 @@ public class UserServiceImpl<T extends BeanId, ID extends Serializable> extends 
 	@Autowired
 	AuthTokenService<AuthToken, Long> authTokenService;
 
-	@Transactional
-	public User createUser(User user) throws Exception {
-		return userRepository.save(user);
-	}
-
-	@Transactional
-	public User updateUser(User user) throws Exception {
-		return userRepository.save(user);
-	}
-
-	@Transactional
-	public void deleteUser(Long userId) throws Exception {
-		userRepository.deleteById(userId);
-	}
-
-	public User getUser(Long userId) throws Exception {
-		return userRepository.findById(userId).get();
-	}
-
-	public List<User> getUsers() throws Exception {
-		return userRepository.findAll();
-	}
-
 	@Override
 	public User findByEmailIdAndPassword(String name, String password) {
 		return userRepository.findByEmailIdAndPassword(name, password);
@@ -64,8 +38,7 @@ public class UserServiceImpl<T extends BeanId, ID extends Serializable> extends 
 
 	@Override
 	public AuthToken login(String name, String password) throws Exception {
-		EncrypterAndDecrypter enc = new EncrypterAndDecrypter();
-		User user = findByEmailIdAndPassword(name, enc.encrypt(password));
+		User user = findByEmailIdAndPassword(name, AppUtils.encrypt(password));
 
 		AuthToken newToken = new AuthToken();
 

@@ -53,7 +53,7 @@ public class User extends BeanId implements Principal {
 	@Column(name = "MODIFIED_DATE")
 	private Date modifiedDate;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade=CascadeType.REMOVE)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade=CascadeType.REMOVE, orphanRemoval = true)
 	private Set<AuthToken> tokens;
 	
 	private transient Long currentAuthTokenId=null;

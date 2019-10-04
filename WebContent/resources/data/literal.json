@@ -3,5 +3,14 @@
 	"products": "Products",
 	"users": "Users",
 	"settings": "Settings",
-	"rememberMe": "Remember me"
+	"rememberMe": "Remember me",
+	"login": "Login",
+	"emailId": "Email Id",
+	"password": "Password",
+	"logout": "Logout",
+	"logoutMsg": "Are you sure, you want to logout ?",
+	"yesLogout": "Yes, logout me.",
+	"cancel": "Cancel",
+	"confirm": "Confirm",
+	"noDataToDisplay": "No Data To Display"
 }

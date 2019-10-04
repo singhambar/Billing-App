@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.singhambar.beans.BeanId;
 import com.singhambar.repositories.BaseRepository;
@@ -57,6 +59,10 @@ public abstract class BaseService<T extends BeanId, ID extends Serializable> imp
 		return baseRepository.findAll();
 	}
 
+	public Page<T> getEntities(Pageable pageable) {
+		return baseRepository.findAll(pageable);
+	}
+
 	public void deleteEntity(T instance) {
 		baseRepository.delete(instance);
 	}
@@ -64,7 +70,7 @@ public abstract class BaseService<T extends BeanId, ID extends Serializable> imp
 	public void deleteEntity(ID id) {
 		baseRepository.deleteById((Long) id);
 	}
-	
+
 	public void deleteAll(T instance) {
 		baseRepository.deleteAll();
 	}

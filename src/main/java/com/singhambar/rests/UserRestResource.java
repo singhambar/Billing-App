@@ -1,13 +1,28 @@
 package com.singhambar.rests;
 
+import static com.singhambar.app.utilities.AppConstants.ADMIN;
+import static com.singhambar.app.utilities.AppConstants.COMPANY;
 import static com.singhambar.app.utilities.AppConstants.COOKIE_MAX_AGE;
+import static com.singhambar.app.utilities.AppConstants.DEFAULT_PROPERTY;
+import static com.singhambar.app.utilities.AppConstants.DIR;
+import static com.singhambar.app.utilities.AppConstants.LIMIT;
 import static com.singhambar.app.utilities.AppConstants.MODE;
+import static com.singhambar.app.utilities.AppConstants.OWNER;
+import static com.singhambar.app.utilities.AppConstants.PAGE;
+import static com.singhambar.app.utilities.AppConstants.PAGE_NO;
+import static com.singhambar.app.utilities.AppConstants.PAGE_SIZE;
+import static com.singhambar.app.utilities.AppConstants.SORT;
+import static com.singhambar.app.utilities.AppConstants.STAFF;
+import static com.singhambar.app.utilities.AppConstants.TOTAL_COUNT;
 
 import java.io.StringWriter;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -21,6 +36,10 @@ import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.singhambar.app.configs.BeanFactory;
@@ -49,7 +68,7 @@ public class UserRestResource extends AbstractRESTResource {
 	}
 
 	@Override
-	@RolesAllowed({ "admin", "owner" })
+	@RolesAllowed({ ADMIN, OWNER })
 	public Response createEntity(@Context UriInfo ui, @Context HttpHeaders hh, String data) throws Exception {
 		StringWriter writer = new StringWriter();
 		User user = null;
@@ -57,7 +76,7 @@ public class UserRestResource extends AbstractRESTResource {
 			ObjectMapper mapper = AppUtils.getMapper();
 			user = mapper.readValue(data, User.class);
 			user.setPassword((AppUtils.encrypt(user.getPassword())));
-			getBean().createUser(user);
+			getBean().createEntity(user);
 			mapper.addMixIn(User.class, UserMixin.class);
 			mapper.writeValue(writer, user);
 		} catch (Exception e) {
@@ -68,16 +87,16 @@ public class UserRestResource extends AbstractRESTResource {
 	}
 
 	@Override
-	@RolesAllowed({ "admin", "owner" })
+	@RolesAllowed({ ADMIN, OWNER })
 	public Response updateEntity(UriInfo ui, HttpHeaders hh, String id, String data) throws Exception {
 		StringWriter writer = new StringWriter();
 		User user = null;
 		try {
 			ObjectMapper mapper = AppUtils.getMapper();
-			user = getBean().getUser(Long.parseLong(id));
+			user = getBean().getEntity(Long.parseLong(id));
 			user = mapper.updateValue(user, data);
 			mapper.addMixIn(User.class, UserMixin.class);
-			user = getBean().updateUser(user);
+			user = getBean().updateEntity(user);
 			mapper.writeValue(writer, user);
 		} catch (Exception e) {
 			getLogger().error("Error while updating user", e);
@@ -87,13 +106,13 @@ public class UserRestResource extends AbstractRESTResource {
 	}
 
 	@Override
-	@RolesAllowed({ "admin", "staff" })
+	@RolesAllowed({ ADMIN, OWNER })
 	public Response getEntity(UriInfo ui, HttpHeaders hh, String id) throws Exception {
 		StringWriter writer = new StringWriter();
 		User user = null;
 		try {
 			ObjectMapper mapper = AppUtils.getMapper();
-			user = getBean().getUser(Long.parseLong(id));
+			user = getBean().getEntity(Long.parseLong(id));
 			mapper.addMixIn(User.class, UserMixin.class);
 			mapper.writeValue(writer, user);
 		} catch (Exception e) {
@@ -104,15 +123,26 @@ public class UserRestResource extends AbstractRESTResource {
 	}
 
 	@Override
-	@RolesAllowed({ "admin", "owner" })
+	@RolesAllowed({ ADMIN, OWNER })
 	public Response getEntities(UriInfo ui, HttpHeaders hh) throws Exception {
 		StringWriter writer = new StringWriter();
-		List<User> user = null;
+		Page<User> user = null;
 		try {
+			MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
+			int size = queryParams.containsKey(LIMIT) ? Integer.parseInt(queryParams.getFirst(LIMIT)) : PAGE_SIZE;
+			int pageNo = queryParams.containsKey(PAGE) ? Integer.parseInt(queryParams.getFirst(PAGE)) : PAGE_NO;
+			String property = queryParams.containsKey(SORT) ? queryParams.getFirst(SORT) : DEFAULT_PROPERTY;
+			Direction direction = queryParams.containsKey(DIR) ? Direction.fromString(queryParams.getFirst(DIR))
+					: Direction.DESC;
 			ObjectMapper mapper = AppUtils.getMapper();
-			user = getBean().getUsers();
+			user = getBean().getEntities(PageRequest.of(pageNo, size, direction, property));
 			mapper.addMixIn(User.class, UserMixin.class);
-			mapper.writeValue(writer, user);
+			Map<String, Object> map = new HashMap<String, Object>(2);
+			getLogger().info("Converting user into JSON ...");
+			map.put("Users", user.getContent());
+			map.put(TOTAL_COUNT, user.getTotalElements());
+			mapper.writeValue(writer, map);
+			getLogger().info("Converted successfully into JSON ...");
 		} catch (Exception e) {
 			getLogger().error("Error while updating user", e);
 			throw e;
@@ -121,7 +151,7 @@ public class UserRestResource extends AbstractRESTResource {
 	}
 
 	@Override
-	@RolesAllowed({ "admin", "owner" })
+	@RolesAllowed({ ADMIN, OWNER })
 	public Response deleteEntity(UriInfo ui, HttpHeaders hh, String id) throws Exception {
 		try {
 			getBean().deleteEntity(Long.parseLong(id));
@@ -153,15 +183,17 @@ public class UserRestResource extends AbstractRESTResource {
 					.build();
 		} catch (Exception e) {
 			getLogger().error("Error while updating user", e);
-		throw e;
-//			return Response.ok("Invalid User Id or Password: " + e.getMessage()).status(Status.BAD_REQUEST).build();
+			throw e;
+			// return Response.ok("Invalid User Id or Password: " +
+			// e.getMessage()).status(Status.BAD_REQUEST).build();
 		}
 	}
 
 	@GET
 	@Path("/logout")
-	@PermitAll
-	public Response logout(@Context UriInfo ui, @Context HttpHeaders hh) throws Exception {
+	@RolesAllowed({ ADMIN, OWNER, STAFF, COMPANY })
+	public Response logout(@Context UriInfo ui, @Context HttpHeaders hh, @Context HttpServletRequest request)
+			throws Exception {
 		try {
 			MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
 			boolean logoutAll = (queryParams.containsKey(MODE) && queryParams.getFirst(MODE).equalsIgnoreCase("all"));
@@ -169,6 +201,8 @@ public class UserRestResource extends AbstractRESTResource {
 			User user = (User) securityContext.getUserPrincipal();
 
 			getBean().logout(user, logoutAll);
+			HttpSession session = request.getSession();
+			session.invalidate();
 		} catch (Exception e) {
 			getLogger().error("Error while logging out user.", e);
 		}
@@ -177,10 +211,10 @@ public class UserRestResource extends AbstractRESTResource {
 						new NewCookie(new Cookie("VALIDATION_KEY", null), null, 0, false))
 				.build();
 	}
-	
+
 	@GET
 	@Path("/userinfo")
-	@RolesAllowed({ "admin", "owner","staff"})
+	@RolesAllowed({ ADMIN, OWNER, STAFF, COMPANY })
 	public Response getUserInfo(@Context UriInfo ui, @Context HttpHeaders hh) throws Exception {
 		StringWriter writer = new StringWriter();
 		User user = null;

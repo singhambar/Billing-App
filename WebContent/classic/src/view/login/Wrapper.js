@@ -1,6 +1,7 @@
 Ext.define('App.view.login.Wrapper', {
     extend: 'Ext.container.Container',
     xtype: 'login-wrapper',
+    controller: 'main',
     layout: {
         type: 'vbox',
         align: 'middle'

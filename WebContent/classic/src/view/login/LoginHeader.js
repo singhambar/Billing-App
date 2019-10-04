@@ -2,7 +2,6 @@ Ext.define('App.view.login.LoginHeader', {
     extend: 'Ext.container.Container',
     xtype: 'login-header',
 
-    controller: 'header',
     initComponent: function() {
         var me = this;
         Ext.apply(me, {

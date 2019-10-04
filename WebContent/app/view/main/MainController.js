@@ -10,46 +10,54 @@ Ext.define('App.view.main.MainController', {
     init: function() {
         var me = this;
         me.control({
-        	
-        	
+
+
         });
-//        Ext.util.History.on({
-//            change: me.onChangeHistory
-//        });
+        //        Ext.util.History.on({
+        //            change: me.onChangeHistory
+        //        });
     },
     routes: {
-        'home': {
-            action: 'onHomePage'
+        'tab/:tabToken': {
+            action: 'onCanvasPages'
         },
-        
+
     },
-    
-    
-    onItemSelected: function (sender, record) {
+
+    onItemSelected: function(sender, record) {
         Ext.Msg.confirm('Confirm', 'Are you sure?', 'onConfirm', this);
     },
 
-    onConfirm: function (choice) {
+    onConfirm: function(choice) {
         if (choice === 'yes') {
             //
         }
     },
-    onClickLogin:function(btn){debugger
-    Ext.Ajax.request({
-    	url:'rest/user/login',
-		method:'POST',
-		jsonData:btn.up('form').getValues(),
-        success: function(response, opts) {
-        	var viewport = Ext.ComponentQuery.query('sub-viewport')[0];
-            if (viewport) {
-                var layout = viewport.getLayout();
-                layout.setActiveItem(1);
-            }
-        },
+    onClickLogin: function(btn) {
+        var me = this,
+            form = btn.up('form');
+        if (form.isValid()) {
+            Ext.Ajax.request({
+                url: Configs.getUrl('User', 'login'),
+                method: 'POST',
+                jsonData: btn.up('form').getValues(),
+                success: function(response, opts) {
+                	AppUtil.loadUserInfo();
+                    var viewport = Ext.ComponentQuery.query('sub-viewport')[0];
+                    if (viewport) {
+                        var layout = viewport.getLayout();
+                        layout.setActiveItem(1);
+                    }
+                },
 
-        failure: function(response, opts) {
-            console.log('server-side failure with status code ' + response.status);
+                failure: function(response, opts) {
+                    console.log('server-side failure with status code ' + response.status);
+                }
+            });
         }
-    });
+    },
+    onCanvasPages: function(tabToken) {
+        var canvas = Ext.ComponentQuery.query('canvas')[0];
+        canvas.getLayout().setActiveItem(tabToken);
     }
 });

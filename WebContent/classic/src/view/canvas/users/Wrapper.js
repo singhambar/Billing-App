@@ -1,7 +1,8 @@
-Ext.define('MyApp.view.canvas.user.Wrapper', {
+Ext.define('MyApp.view.canvas.users.Wrapper', {
     extend: 'Ext.container.Container',
-	xtype: 'registeration-wrapper',
-	layout: {
+    xtype: 'registeration-wrapper',
+    controller: 'users',
+    layout: {
         type: 'hbox'
     },
     items: [{
