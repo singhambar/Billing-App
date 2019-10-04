@@ -6,14 +6,14 @@ Ext.define('App.view.main.List', {
     xtype: 'mainlist',
 
     requires: [
-        'App.store.Personnel'
+        'App.store.Products'
     ],
 
     title: 'Personnel',
 
-    store: {
-        type: 'personnel'
-    },
+//    store: {
+//        type: 'personnel'
+//    },
 
     columns: [
         { text: 'Name',  dataIndex: 'name' },
