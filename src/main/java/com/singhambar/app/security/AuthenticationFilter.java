@@ -77,14 +77,15 @@ public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequ
 					}
 					if (!isAllowed) {
 						requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
-								.entity("You cannot access this resource").build());
+								.entity("You do not have permission to access this resource.").build());
 						return;
 					}
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			requestContext.abortWith(
-					Response.status(Response.Status.UNAUTHORIZED).entity("You cannot access this resource").build());
+					Response.status(Response.Status.UNAUTHORIZED).entity("You do not have permission to access this resource.").build());
 			return;
 		}
 	}

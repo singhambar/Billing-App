@@ -126,7 +126,7 @@ public class UserRestResource extends AbstractRESTResource {
 	@RolesAllowed({ ADMIN, OWNER })
 	public Response getEntities(UriInfo ui, HttpHeaders hh) throws Exception {
 		StringWriter writer = new StringWriter();
-		Page<User> user = null;
+		Page<User> users = null;
 		try {
 			MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
 			int size = queryParams.containsKey(LIMIT) ? Integer.parseInt(queryParams.getFirst(LIMIT)) : PAGE_SIZE;
@@ -135,12 +135,12 @@ public class UserRestResource extends AbstractRESTResource {
 			Direction direction = queryParams.containsKey(DIR) ? Direction.fromString(queryParams.getFirst(DIR))
 					: Direction.DESC;
 			ObjectMapper mapper = AppUtils.getMapper();
-			user = getBean().getEntities(PageRequest.of(pageNo, size, direction, property));
+			users = getBean().getEntities(PageRequest.of(pageNo-1, size, direction, property));
 			mapper.addMixIn(User.class, UserMixin.class);
 			Map<String, Object> map = new HashMap<String, Object>(2);
 			getLogger().info("Converting user into JSON ...");
-			map.put("Users", user.getContent());
-			map.put(TOTAL_COUNT, user.getTotalElements());
+			map.put("Users", users.getContent());
+			map.put(TOTAL_COUNT, users.getTotalElements());
 			mapper.writeValue(writer, map);
 			getLogger().info("Converted successfully into JSON ...");
 		} catch (Exception e) {
@@ -167,7 +167,6 @@ public class UserRestResource extends AbstractRESTResource {
 	@Path("/login")
 	@PermitAll
 	public Response login(@Context UriInfo ui, @Context HttpHeaders hh, String data) throws Exception {
-
 		User user = null;
 		try {
 			ObjectMapper mapper = AppUtils.getMapper();
@@ -182,10 +181,8 @@ public class UserRestResource extends AbstractRESTResource {
 							new NewCookie(validationKey, null, COOKIE_MAX_AGE, false))
 					.build();
 		} catch (Exception e) {
-			getLogger().error("Error while updating user", e);
-			throw e;
-			// return Response.ok("Invalid User Id or Password: " +
-			// e.getMessage()).status(Status.BAD_REQUEST).build();
+			getLogger().error("Error while logging in", e);
+			return Response.ok(e.getMessage()).status(Status.BAD_REQUEST).build();
 		}
 	}
 

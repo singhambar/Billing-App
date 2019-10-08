@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.singhambar.app.utilities.AppUtils;
@@ -39,12 +40,11 @@ public class UserServiceImpl<T extends BeanId, ID extends Serializable> extends 
 	@Override
 	public AuthToken login(String name, String password) throws Exception {
 		User user = findByEmailIdAndPassword(name, AppUtils.encrypt(password));
-
+		if (user == null)
+			throw new Exception("Invalid User Id or Password.");
 		AuthToken newToken = new AuthToken();
-
 		String token = RandomStringUtils.randomAlphanumeric(16);
 		String rawValidator = RandomStringUtils.randomAlphanumeric(64);
-
 		String hashedValidator = HashGeneratorUtils.generateSHA256(rawValidator);
 
 		newToken.setToken(token);

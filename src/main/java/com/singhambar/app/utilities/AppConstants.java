@@ -24,7 +24,7 @@ public interface AppConstants {
 
 	public static final String DESC = "DESC";
 
-	public static final Integer PAGE_SIZE = 20;
+	public static final Integer PAGE_SIZE = 15;
 
 	public static final Integer PAGE_NO = 0;
 

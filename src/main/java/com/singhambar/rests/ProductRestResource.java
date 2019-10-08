@@ -19,7 +19,6 @@ import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -31,6 +30,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import com.singhambar.app.configs.BeanFactory;
 import com.singhambar.app.mixins.UserMixin;
 import com.singhambar.app.utilities.AppUtils;
@@ -57,14 +57,14 @@ public class ProductRestResource extends AbstractRESTResource {
 
 	@Override
 	@RolesAllowed({ ADMIN, OWNER, STAFF, COMPANY })
-	public Response createEntity(@Context UriInfo ui, @Context HttpHeaders hh, String data) throws Exception {
+	public Response createEntity(UriInfo ui, HttpHeaders hh, String data) throws Exception {
 		StringWriter writer = new StringWriter();
 		Product product = null;
 		try {
 			ObjectMapper mapper = AppUtils.getMapper();
 			product = mapper.readValue(data, Product.class);
+			product.setGst(5);
 			getBean().createEntity(product);
-			mapper.addMixIn(Product.class, UserMixin.class);
 			mapper.writeValue(writer, product);
 		} catch (Exception e) {
 			getLogger().error("Error while creating product", e);
@@ -81,8 +81,8 @@ public class ProductRestResource extends AbstractRESTResource {
 		try {
 			ObjectMapper mapper = AppUtils.getMapper();
 			product = getBean().getEntity(Long.parseLong(id));
-			product = mapper.updateValue(product, data);
-			mapper.addMixIn(Product.class, UserMixin.class);
+			ObjectReader updater = mapper.readerForUpdating(product);
+			product = updater.readValue(data);
 			product = getBean().updateEntity(product);
 			mapper.writeValue(writer, product);
 		} catch (Exception e) {
@@ -122,7 +122,7 @@ public class ProductRestResource extends AbstractRESTResource {
 			Direction direction = queryParams.containsKey(DIR) ? Direction.fromString(queryParams.getFirst(DIR))
 					: Direction.DESC;
 			ObjectMapper mapper = AppUtils.getMapper();
-			products = getBean().getEntities(PageRequest.of(pageNo, size, direction, property));
+			products = getBean().getEntities(PageRequest.of(pageNo - 1, size, direction, property));
 			Map<String, Object> map = new HashMap<String, Object>(2);
 			getLogger().info("Converting user into JSON ...");
 			map.put("Products", products.getContent());

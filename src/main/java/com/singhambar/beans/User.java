@@ -1,5 +1,6 @@
 package com.singhambar.beans;
 
+import java.io.Serializable;
 import java.security.Principal;
 import java.util.Date;
 import java.util.Set;
@@ -15,6 +16,7 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.Transient;
 
 /**
  * @author Ambar Singh
@@ -23,19 +25,21 @@ import org.hibernate.annotations.UpdateTimestamp;
  */
 @Entity
 @Table(name = "USER")
-public class User extends BeanId implements Principal {
+public class User extends BeanId implements Principal, Serializable {
+
+	private static final long serialVersionUID = -5494612033115021308L;
 
 	@Column(name = "FIRST_NAME", nullable = false, length = 48)
 	private String firstName;
 
-	@Column(name = "LAST_NAME", nullable = false, length = 48)
+	@Column(name = "LAST_NAME", length = 48)
 	private String lastName;
 
 	@Column(name = "EMAIL_ID", unique = true, nullable = false, length = 255)
 	private String emailId;
 
-	@Column(name = "MOBILE", unique = true, nullable = false, length = 15)
-	private String mobile;
+	@Column(name = "CONTACT_NO", length = 15)
+	private String contactNo;
 
 	@Column(name = "PASSWORD", nullable = false, length = 255)
 	private String password;
@@ -45,23 +49,20 @@ public class User extends BeanId implements Principal {
 
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATED_DATE")
+	@Column(name = "CREATED_DATE", nullable = false)
 	private Date createdDate;
 
 	@UpdateTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "MODIFIED_DATE")
+	@Column(name = "MODIFIED_DATE", nullable = false)
 	private Date modifiedDate;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade=CascadeType.REMOVE, orphanRemoval = true)
 	private Set<AuthToken> tokens;
 	
 	private transient Long currentAuthTokenId=null;
-
-	@Override
-	public String getName() {
-		return firstName + " " + lastName;
-	}
+	
+	private transient String name=null;
 
 	/**
 	 * @return the firstName
@@ -71,8 +72,7 @@ public class User extends BeanId implements Principal {
 	}
 
 	/**
-	 * @param firstName
-	 *            the firstName to set
+	 * @param firstName the firstName to set
 	 */
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
@@ -86,8 +86,7 @@ public class User extends BeanId implements Principal {
 	}
 
 	/**
-	 * @param lastName
-	 *            the lastName to set
+	 * @param lastName the lastName to set
 	 */
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
@@ -101,26 +100,24 @@ public class User extends BeanId implements Principal {
 	}
 
 	/**
-	 * @param emailId
-	 *            the emailId to set
+	 * @param emailId the emailId to set
 	 */
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
 	}
 
 	/**
-	 * @return the mobile
+	 * @return the contactNo
 	 */
-	public String getMobile() {
-		return mobile;
+	public String getContactNo() {
+		return contactNo;
 	}
 
 	/**
-	 * @param mobile
-	 *            the mobile to set
+	 * @param contactNo the contactNo to set
 	 */
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
+	public void setContactNo(String contactNo) {
+		this.contactNo = contactNo;
 	}
 
 	/**
@@ -131,8 +128,7 @@ public class User extends BeanId implements Principal {
 	}
 
 	/**
-	 * @param password
-	 *            the password to set
+	 * @param password the password to set
 	 */
 	public void setPassword(String password) {
 		this.password = password;
@@ -146,8 +142,7 @@ public class User extends BeanId implements Principal {
 	}
 
 	/**
-	 * @param role
-	 *            the role to set
+	 * @param role the role to set
 	 */
 	public void setRole(String role) {
 		this.role = role;
@@ -161,8 +156,7 @@ public class User extends BeanId implements Principal {
 	}
 
 	/**
-	 * @param createdDate
-	 *            the createdDate to set
+	 * @param createdDate the createdDate to set
 	 */
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
@@ -176,8 +170,7 @@ public class User extends BeanId implements Principal {
 	}
 
 	/**
-	 * @param updationDate
-	 *            the modifiedDate to set
+	 * @param modifiedDate the modifiedDate to set
 	 */
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
@@ -191,8 +184,7 @@ public class User extends BeanId implements Principal {
 	}
 
 	/**
-	 * @param tokens
-	 *            the tokens to set
+	 * @param tokens the tokens to set
 	 */
 	public void setTokens(Set<AuthToken> tokens) {
 		this.tokens = tokens;
@@ -212,4 +204,16 @@ public class User extends BeanId implements Principal {
 		this.currentAuthTokenId = currentAuthTokenId;
 	}
 
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = firstName + " " + lastName;
+	}
+	
+	@Transient
+	@Override
+	public String getName() {
+		return name;
+	}
 }

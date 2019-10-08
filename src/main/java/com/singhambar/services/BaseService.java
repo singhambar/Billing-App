@@ -32,7 +32,7 @@ public abstract class BaseService<T extends BeanId, ID extends Serializable> imp
 	}
 
 	public T createEntity(T instance, boolean flush) {
-		if (instance.getId() < 0) {
+		if (instance.getId()!=null && instance.getId() < 0) {
 			instance.setId(null);
 		}
 		T instanceCreated = flush ? baseRepository.saveAndFlush(instance) : baseRepository.save(instance);
