@@ -1,7 +1,7 @@
-Ext.define('App.view.canvas.settings.SettingsController', {
+Ext.define('App.view.canvas.billings.BillingsController', {
     extend: 'Ext.app.ViewController',
 
-    alias: 'controller.settings',
+    alias: 'controller.billings',
 
     onItemSelected: function (sender, record) {
         Ext.Msg.confirm('Confirm', 'Are you sure?', 'onConfirm', this);

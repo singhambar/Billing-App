@@ -1,0 +1,9 @@
+{
+	"companyName": "Company_Name",
+	"baseBackgroundColor": "background-color:#FFFFFF",
+	"copyright": "Copyright &copy; Company_Name 2019&nbsp;|&nbsp;All rights reserved.",
+	"gstRates": ["5","12","18","28"],
+	"minimumWidth": 1024,
+	"helpURL": "",
+	"requestTimeOut": 180000
+}

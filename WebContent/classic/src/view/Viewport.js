@@ -26,7 +26,7 @@ Ext.define('App.view.Viewport', {
         	flex: 1
         },{
             xtype: 'app-footer',
-            height: 50
+            height: 30
         }];
     }
 });

@@ -16,7 +16,8 @@ Ext.define('App.view.SubViewport', {
         return [{
             xtype: 'login-wrapper'
         },{
-                xtype: 'canvas'
+                xtype: 'canvas',height:20,
+                flex:1
             }];
     }
 });

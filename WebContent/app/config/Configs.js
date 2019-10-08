@@ -6,7 +6,11 @@ Ext.define('App.config.Configs',{
         me.initConfig(config);
 	},
 	config : {
-	    restUserUrl    : 'rest/user'
+		requestTimeOut: 180000,
+		copyright: "Copyright &copy; Company_Name 2019&nbsp;|&nbsp;All rights reserved.",
+		gstRates: ["5","12","18","28"],
+	    restUserUrl    : 'rest/user',
+	    restProductUrl    : 'rest/product',
 	},
 	getUrl:function(config,path){
 		var me=this;

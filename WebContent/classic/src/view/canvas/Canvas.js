@@ -12,31 +12,29 @@ Ext.define('App.view.Canvas', {
     },
     tabBarHeaderPosition: 1,
 
-    header: {
+    header: {height:70,
         layout: {
             align: 'stretchmax'
         },
         title: {
-            text: '<img style="width: 50px; height: 50px" src="resources/images/logo.png?206">',
+            text: '<img style="width: 50px; height: 50px" src="resources/images/logo.png?206">',height:55,
             flex: 0.1
         }
     },
 
     tabBar: {
-
-        flex: 2,
+        flex: 2,height:70,
         border: false
     },
     border: false,
     defaults: {
-        iconAlign: 'left',
-        bodyPadding: 0
+        iconAlign: 'left'
     },
     listeners: {
         tabchange: 'onTabChange'
     },tools: [{
 //        type: 'help',
-        iconCls:'fa fa-question-circle',
+        iconCls:'fa fa-question-circle',width:30,
         callback: function() {
             // show help here
         }
@@ -68,11 +66,11 @@ Ext.define('App.view.Canvas', {
                 xtype: 'registeration-wrapper'
             }]
         }, {
-            title: Literal.settings,
-            itemId: 'settings',
+            title: Literal.billings,
+            itemId: 'billings',
             iconCls: 'fa-cog',
             items: [{
-                xtype: 'settings-wrapper'
+                xtype: 'billings-wrapper'
             }]
         }];
     }

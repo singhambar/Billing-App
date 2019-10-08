@@ -15,7 +15,8 @@
      */
     "requires": [
         "font-awesome",
-		"charts"
+		"charts",
+		"ux"
     ],
 
     /**

@@ -1,7 +1,7 @@
-Ext.define('MyApp.view.canvas.products.Wrapper', {
+Ext.define('MyApp.view.canvas.billings.Wrapper', {
     extend: 'Ext.container.Container',
-    xtype: 'products-wrapper',
-    controller: 'products',
+    xtype: 'billings-wrapper',
+    controller: 'billings',
     layout: {
         type: 'vbox'
     },

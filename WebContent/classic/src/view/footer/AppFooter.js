@@ -6,7 +6,7 @@ Ext.define('App.view.footer.AppFooter', {
         Ext.apply(me, {
             items: [{
                 xtype: 'button',
-                text: 'aaa'
+                text: Configs.getCopyright()
             }]
         });
         me.callParent(arguments);

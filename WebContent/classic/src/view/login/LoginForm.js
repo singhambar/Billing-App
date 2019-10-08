@@ -1,27 +1,30 @@
 Ext.define('App.view.login.LoginForm', {
     extend: 'Ext.form.Panel',
+    
     xtype: 'login-form',
+    
     title: 'Login',
-    frame: true,
     width: 400,
-    bodyPadding: 10,
+    frame : true,
+	bodyPadding : 10,
     initComponent: function() {
         var me = this;
         Ext.apply(me, {
             items: me.buildItems(),
-            buttons: me.buildButton()
+            buttons: me.buildButtons()
         });
-
         me.callParent(arguments);
     },
-    defaults: {
-        anchor: '100%',
-        labelWidth: 80,
-        labelSeparator:'',
-        xtype: 'textfield',
-        margin: '20 20 20 20',
-        msgTarget: 'under'
-    },
+    defaults : {
+		labelAlign : 'top',
+		labelSeparator : '',
+		labelWidth: 120,
+		xtype : 'textfield',
+		margin : '0 10 10 10',
+		msgTarget : 'side',
+		anchor: '100%',
+		allowBlank: false
+	},
     buildItems: function() {
         return [{
             allowBlank: false,
@@ -37,7 +40,7 @@ Ext.define('App.view.login.LoginForm', {
         }]
     },
 
-    buildButton: function() {
+    buildButtons: function() {
         return [{
             text: Literal.login,
             handler: 'onClickLogin'

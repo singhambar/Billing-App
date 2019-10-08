@@ -5,10 +5,6 @@ Ext.define('App.view.main.List', {
     extend: 'Ext.grid.Panel',
     xtype: 'mainlist',
 
-    requires: [
-        'App.store.Products'
-    ],
-
     title: 'Personnel',
 
 //    store: {

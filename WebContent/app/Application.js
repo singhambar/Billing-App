@@ -22,8 +22,8 @@ Ext.define('App.Application', {
         'App.config.Runtime',
         'Ext.window.MessageBox'
     ],
-    stores:['ChartStore'],
-    defaultToken: 'home',
+    stores:['ChartStore','ProductStore','UserStore','GstStore','RoleStore'],
+    defaultToken: 'login',
     listen: {
         controller: {
             'login': {
@@ -39,6 +39,16 @@ Ext.define('App.Application', {
             success: function(response, opts) {
                 var obj = Ext.decode(response.responseText);
                 Ext.override(Literal, obj);
+            },
+            failure: function(response, opts) {}
+        });
+        Ext.Ajax.request({
+            url: 'resources/data/configs.json?tag='+Date.now(),
+            async: false,
+            disableCaching:false,
+            success: function(response, opts) {
+                var obj = Ext.decode(response.responseText);
+                Configs.setConfig(obj);
             },
             failure: function(response, opts) {}
         });
@@ -60,14 +70,13 @@ Ext.define('App.Application', {
         AppUtil.loadUserInfo();
         if (Ext.isEmpty(Context.getLoggedInUser())) {
             activeItem = 0;
-            Ext.util.Cookies.set('OLD_TOKEN',token);
             token = 'login';
         } else {
             activeItem = 1;
             token = Ext.isEmpty(token) ? me.getDefaultToken() : token;
         }
-        this.getMainView().down('sub-viewport').getLayout().setActiveItem(activeItem);
-        me.redirectTo('tab/home', true);
+        me.getMainView().down('sub-viewport').getLayout().setActiveItem(activeItem);
+        me.redirectTo(token, true);
     },
     onAppUpdate: function () {
         Ext.Msg.confirm('Application Update', 'This application has an update, reload?',
