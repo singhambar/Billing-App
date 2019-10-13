@@ -39,5 +39,15 @@
 	"manageUsers": "Manage Users",
 	"addUser": "Add User",
 	"editUser": "Edit User",
-	"modifiedDate": "Modified Date"
+	"modifiedDate": "Modified Date",
+	"address": "Address",
+	"units": "Unit(s)",
+	"price": "Price",
+	"subTotal": "SubTotal",
+	"offerdiscount": "Offer/Discount",
+	"totalDue": "Total Due",
+	"lineTotal": "Line Total",
+	"date": "Date",
+	"invoiceNo": "Invoice No.",
+	"gstin": "GSTIN"
 }

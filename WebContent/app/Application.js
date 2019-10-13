@@ -22,7 +22,7 @@ Ext.define('App.Application', {
         'App.config.Runtime',
         'Ext.window.MessageBox'
     ],
-    stores:['ChartStore','ProductStore','UserStore','GstStore','RoleStore'],
+    stores:['ChartStore','ProductStore','UserStore','GstStore','RoleStore','BillingProductStore'],
     defaultToken: 'login',
     listen: {
         controller: {

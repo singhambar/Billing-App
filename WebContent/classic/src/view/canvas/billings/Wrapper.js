@@ -2,6 +2,7 @@ Ext.define('MyApp.view.canvas.billings.Wrapper', {
     extend: 'Ext.container.Container',
     xtype: 'billings-wrapper',
     controller: 'billings',
+    viewModel: 'billing',
     layout: {
         type: 'vbox'
     },
@@ -10,9 +11,6 @@ Ext.define('MyApp.view.canvas.billings.Wrapper', {
     height: '100%',
     width: '100%',
     items: [{
-        xtype: 'product-form'
-    }, {
-        xtype: 'product-grid',
-        margin: '10 0 0 0'
+        xtype: 'billing-grid-form'
     }]
 });
