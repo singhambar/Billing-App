@@ -17,6 +17,7 @@ Ext.define('App.view.canvas.products.ProductForm', {
         return [{
                 items: [{
                     name: 'id',
+                    allowBlank: true,
                     hidden: true
                 }, {
                     fieldLabel: Literal.name,
