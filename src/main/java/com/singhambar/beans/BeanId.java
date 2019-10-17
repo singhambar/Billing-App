@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Ambar Singh
@@ -16,8 +17,9 @@ import javax.persistence.PrePersist;
 @MappedSuperclass
 public class BeanId {
 
-	@Id
-	@Column(name = "ID", updatable = false, unique = true, nullable = false)
+	@Id()
+	@NotNull
+	@Column(name = "ID", updatable = false, unique = true)
 	private Long id;
 
 	public Long getId() {

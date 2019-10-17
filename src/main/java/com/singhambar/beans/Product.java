@@ -11,6 +11,10 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -25,30 +29,43 @@ public class Product extends BeanId implements Serializable {
 
 	private static final long serialVersionUID = 2029738664847525714L;
 
-	@Column(name = "NAME", unique=true, nullable = false, length = 128)
+	@NotNull
+	@NotBlank
+	@Size(min = 1, max = 128)
+	@Column(name = "NAME", unique = true)
 	private String name;
 
-	@Column(name = "VENDOR", length = 128)
+	@Size(max = 128)
+	@Column(name = "VENDOR")
 	private String vendor;
 
-	@Column(name = "COST_PRICE", nullable = false)
+	@NotNull
+	@PositiveOrZero
+	@Column(name = "COST_PRICE")
 	private Long costPrice;
 
-	@Column(name = "SELLING_PRICE", nullable = false)
+	@NotNull
+	@PositiveOrZero
+	@Column(name = "SELLING_PRICE")
 	private Long sellingPrice;
 
-	@Column(name = "GST", nullable = false)
+	@NotNull
+	@Column(name = "GST")
 	private Integer gst;
 
-	@Column(name = "QUANTITY", nullable = false)
+	@NotNull
+	@PositiveOrZero
+	@Column(name = "QUANTITY")
 	private Integer quantity = 0;
 
-	@Column(name = "EXTRA_DETAILS", length = 2096)
+	@Size(max = 2096)
+	@Column(name = "EXTRA_DETAILS")
 	private String extraDetails;
-	
+
+	@NotNull
 	@UpdateTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "MODIFIED_DATE", nullable = false)
+	@Column(name = "MODIFIED_DATE")
 	private Date modifiedDate;
 
 	/**
@@ -59,7 +76,8 @@ public class Product extends BeanId implements Serializable {
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -73,7 +91,8 @@ public class Product extends BeanId implements Serializable {
 	}
 
 	/**
-	 * @param vendor the vendor to set
+	 * @param vendor
+	 *            the vendor to set
 	 */
 	public void setVendor(String vendor) {
 		this.vendor = vendor;
@@ -87,7 +106,8 @@ public class Product extends BeanId implements Serializable {
 	}
 
 	/**
-	 * @param costPrice the costPrice to set
+	 * @param costPrice
+	 *            the costPrice to set
 	 */
 	public void setCostPrice(Long costPrice) {
 		this.costPrice = costPrice;
@@ -101,7 +121,8 @@ public class Product extends BeanId implements Serializable {
 	}
 
 	/**
-	 * @param sellingPrice the sellingPrice to set
+	 * @param sellingPrice
+	 *            the sellingPrice to set
 	 */
 	public void setSellingPrice(Long sellingPrice) {
 		this.sellingPrice = sellingPrice;
@@ -115,7 +136,8 @@ public class Product extends BeanId implements Serializable {
 	}
 
 	/**
-	 * @param gst the gst to set
+	 * @param gst
+	 *            the gst to set
 	 */
 	public void setGst(Integer gst) {
 		this.gst = gst;
@@ -129,7 +151,8 @@ public class Product extends BeanId implements Serializable {
 	}
 
 	/**
-	 * @param quantity the quantity to set
+	 * @param quantity
+	 *            the quantity to set
 	 */
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
@@ -143,7 +166,8 @@ public class Product extends BeanId implements Serializable {
 	}
 
 	/**
-	 * @param extraDetails the extraDetails to set
+	 * @param extraDetails
+	 *            the extraDetails to set
 	 */
 	public void setExtraDetails(String extraDetails) {
 		this.extraDetails = extraDetails;
@@ -157,11 +181,11 @@ public class Product extends BeanId implements Serializable {
 	}
 
 	/**
-	 * @param modifiedDate the modifiedDate to set
+	 * @param modifiedDate
+	 *            the modifiedDate to set
 	 */
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
-
 
 }

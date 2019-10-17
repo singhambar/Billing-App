@@ -3,13 +3,16 @@
  */
 package com.singhambar.beans;
 
-import javax.persistence.CascadeType;
+import static javax.persistence.FetchType.EAGER;
+
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Ambar Singh
@@ -19,16 +22,21 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "AUTH_TOKEN")
-public class AuthToken extends BeanId {
+public class AuthToken extends BeanId implements Serializable {
 
+	private static final long serialVersionUID = 8215969076699490277L;
+
+	@NotNull
 	@Column(name = "TOKEN")
 	private String token;
 
+	@NotNull
 	@Column(name = "VALIDATOR")
 	private String validator;
 
-	@JoinColumn(name = "USER_ID", nullable = false)
-	@ManyToOne(fetch = FetchType.EAGER)
+	@NotNull
+	@JoinColumn(name = "USER_ID")
+	@ManyToOne(fetch = EAGER)
 	private User user;
 
 	private transient String validationKey;

@@ -13,6 +13,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -29,40 +33,58 @@ public class User extends BeanId implements Principal, Serializable {
 
 	private static final long serialVersionUID = -5494612033115021308L;
 
-	@Column(name = "FIRST_NAME", nullable = false, length = 48)
+	@NotNull
+	@NotBlank
+	@Size(min = 1, max = 48)
+	@Column(name = "FIRST_NAME")
 	private String firstName;
 
-	@Column(name = "LAST_NAME", length = 48)
+	@NotNull
+	@NotBlank
+	@Size(min = 1, max = 48)
+	@Column(name = "LAST_NAME")
 	private String lastName;
 
-	@Column(name = "EMAIL_ID", unique = true, nullable = false, length = 255)
+	@NotNull
+	@NotBlank
+	@Email
+	@Size(min = 5, max = 512)
+	@Column(name = "EMAIL_ID", unique = true)
 	private String emailId;
 
-	@Column(name = "CONTACT_NO", length = 15)
+	@Size(max = 15)
+	@Column(name = "CONTACT_NO")
 	private String contactNo;
 
-	@Column(name = "PASSWORD", nullable = false, length = 255)
+	@NotNull
+	@Size(min = 8, max = 512)
+	@Column(name = "PASSWORD")
 	private String password;
 
-	@Column(name = "ROLE", unique = true, nullable = false, length = 20)
+	@NotNull
+	@NotBlank
+	@Size(max = 20)
+	@Column(name = "ROLE")
 	private String role;
 
+	@NotNull
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATED_DATE", nullable = false)
+	@Column(name = "CREATED_DATE")
 	private Date createdDate;
 
+	@NotNull
 	@UpdateTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "MODIFIED_DATE", nullable = false)
+	@Column(name = "MODIFIED_DATE")
 	private Date modifiedDate;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade=CascadeType.REMOVE, orphanRemoval = true)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private Set<AuthToken> tokens;
-	
-	private transient Long currentAuthTokenId=null;
-	
-	private transient String name=null;
+
+	private transient Long currentAuthTokenId = null;
+
+	private transient String name = null;
 
 	/**
 	 * @return the firstName
@@ -72,7 +94,8 @@ public class User extends BeanId implements Principal, Serializable {
 	}
 
 	/**
-	 * @param firstName the firstName to set
+	 * @param firstName
+	 *            the firstName to set
 	 */
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
@@ -86,7 +109,8 @@ public class User extends BeanId implements Principal, Serializable {
 	}
 
 	/**
-	 * @param lastName the lastName to set
+	 * @param lastName
+	 *            the lastName to set
 	 */
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
@@ -100,7 +124,8 @@ public class User extends BeanId implements Principal, Serializable {
 	}
 
 	/**
-	 * @param emailId the emailId to set
+	 * @param emailId
+	 *            the emailId to set
 	 */
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
@@ -114,7 +139,8 @@ public class User extends BeanId implements Principal, Serializable {
 	}
 
 	/**
-	 * @param contactNo the contactNo to set
+	 * @param contactNo
+	 *            the contactNo to set
 	 */
 	public void setContactNo(String contactNo) {
 		this.contactNo = contactNo;
@@ -128,7 +154,8 @@ public class User extends BeanId implements Principal, Serializable {
 	}
 
 	/**
-	 * @param password the password to set
+	 * @param password
+	 *            the password to set
 	 */
 	public void setPassword(String password) {
 		this.password = password;
@@ -142,7 +169,8 @@ public class User extends BeanId implements Principal, Serializable {
 	}
 
 	/**
-	 * @param role the role to set
+	 * @param role
+	 *            the role to set
 	 */
 	public void setRole(String role) {
 		this.role = role;
@@ -156,7 +184,8 @@ public class User extends BeanId implements Principal, Serializable {
 	}
 
 	/**
-	 * @param createdDate the createdDate to set
+	 * @param createdDate
+	 *            the createdDate to set
 	 */
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
@@ -170,7 +199,8 @@ public class User extends BeanId implements Principal, Serializable {
 	}
 
 	/**
-	 * @param modifiedDate the modifiedDate to set
+	 * @param modifiedDate
+	 *            the modifiedDate to set
 	 */
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
@@ -184,7 +214,8 @@ public class User extends BeanId implements Principal, Serializable {
 	}
 
 	/**
-	 * @param tokens the tokens to set
+	 * @param tokens
+	 *            the tokens to set
 	 */
 	public void setTokens(Set<AuthToken> tokens) {
 		this.tokens = tokens;
@@ -198,19 +229,21 @@ public class User extends BeanId implements Principal, Serializable {
 	}
 
 	/**
-	 * @param currentAuthTokenId the currentAuthTokenId to set
+	 * @param currentAuthTokenId
+	 *            the currentAuthTokenId to set
 	 */
 	public void setCurrentAuthTokenId(Long currentAuthTokenId) {
 		this.currentAuthTokenId = currentAuthTokenId;
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = firstName + " " + lastName;
 	}
-	
+
 	@Transient
 	@Override
 	public String getName() {
