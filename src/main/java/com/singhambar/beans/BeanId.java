@@ -32,6 +32,27 @@ public class BeanId {
 
 	@PrePersist
 	public void generateId() {
-		id = (id == null) ? System.currentTimeMillis() : id;
+		id = (id == null||id<0) ? System.currentTimeMillis() : id;
+	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + ":" + getId();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj != null && obj instanceof BeanId) {
+			BeanId b = (BeanId) obj;
+			return b.getId() == getId();
+		} else {
+			return super.equals(obj);
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return this.getId().intValue();
+
 	}
 }

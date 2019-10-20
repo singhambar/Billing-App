@@ -32,9 +32,12 @@ import org.springframework.data.domain.Sort.Direction;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.singhambar.app.configs.BeanFactory;
+import com.singhambar.app.mixins.BillMixin;
+import com.singhambar.app.mixins.BilledProductMixin;
 import com.singhambar.app.mixins.UserMixin;
 import com.singhambar.app.utilities.AppUtils;
 import com.singhambar.beans.Bill;
+import com.singhambar.beans.BilledProduct;
 import com.singhambar.services.BillService;
 
 /**
@@ -63,7 +66,10 @@ public class BillRestResource extends AbstractRESTResource {
 		try {
 			ObjectMapper mapper = AppUtils.getMapper();
 			bill = mapper.readValue(data, Bill.class);
+			
 			getBean().createEntity(bill);
+			mapper.addMixIn(Bill.class, BillMixin.class);
+			mapper.addMixIn(Bill.class, BilledProductMixin.class);
 			mapper.writeValue(writer, bill);
 		} catch (Exception e) {
 			getLogger().error("Error while creating bill", e);

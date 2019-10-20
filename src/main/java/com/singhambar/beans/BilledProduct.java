@@ -31,13 +31,13 @@ public class BilledProduct extends BeanId implements Serializable {
 	private static final long serialVersionUID = -941414578213547463L;
 
 	@NotNull
-	@ManyToOne(fetch = EAGER, cascade = ALL)
+	@ManyToOne
 	@JoinColumn(name = "BILL_ID")
 	private Bill billId;
 
 	@NotNull
-	@OneToOne(fetch = LAZY)
-	@PrimaryKeyJoinColumn(name = "PRODUCT_ID")
+	@ManyToOne(fetch = LAZY)
+	@JoinColumn(name = "PRODUCT_ID")
 	private Product productId;
 
 	@NotNull

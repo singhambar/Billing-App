@@ -8,6 +8,7 @@ import static javax.persistence.FetchType.EAGER;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -22,6 +23,7 @@ import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.util.ObjectUtils;
 
 /**
  * @author Ambar Singh
@@ -229,9 +231,14 @@ public class Bill extends BeanId implements Serializable {
 	}
 
 	/**
-	 * @param billedProducts the billedProducts to set
+	 * @param billedProducts
+	 *            the billedProducts to set
 	 */
 	public void setBilledProducts(Set<BilledProduct> billedProducts) {
+
+		if (!ObjectUtils.isEmpty(billedProducts))
+			billedProducts.stream().forEach(bp -> bp.setBillId(this));
+
 		this.billedProducts = billedProducts;
 	}
 	

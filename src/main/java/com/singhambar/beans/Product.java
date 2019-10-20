@@ -5,9 +5,13 @@ package com.singhambar.beans;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -67,6 +71,9 @@ public class Product extends BeanId implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "MODIFIED_DATE")
 	private Date modifiedDate;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "productId", orphanRemoval = true)
+	private Set<BilledProduct> billedProduct;
 
 	/**
 	 * @return the name
@@ -186,6 +193,20 @@ public class Product extends BeanId implements Serializable {
 	 */
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
+	}
+
+	/**
+	 * @return the billedProduct
+	 */
+	public Set<BilledProduct> getBilledProduct() {
+		return billedProduct;
+	}
+
+	/**
+	 * @param billedProduct the billedProduct to set
+	 */
+	public void setBilledProduct(Set<BilledProduct> billedProduct) {
+		this.billedProduct = billedProduct;
 	}
 
 }
